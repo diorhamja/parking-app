@@ -35,7 +35,7 @@ const ShowMap = (props) => {
     };
 
     return (
-        <APIProvider apiKey={ process.env.API_KEY } >
+        <APIProvider apiKey={ import.meta.env.VITE_API_KEY } >
         <Map
             onLoad={onMapLoad}
             onClick={handleMapClick}

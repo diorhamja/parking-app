@@ -46,7 +46,7 @@ const AddSpot = (props) => {
                 {
                     params: {
                         latlng: `${lat},${lng}`,
-                        key: process.env.API_KEY,
+                        key: import.meta.env.VITE_API_KEY,
                     },
                 }
             );
