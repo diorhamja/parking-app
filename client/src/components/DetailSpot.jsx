@@ -41,7 +41,7 @@ const DetailSpot = (props) => {
             {
             params: {
                 latlng: `${lat},${lng}`,
-                key: 'AIzaSyDA9ei89QNEHdNji9_b2rXJgjLVj8Twpms',
+                key: process.env.API_KEY,
             },
             }
         );

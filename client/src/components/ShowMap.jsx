@@ -35,7 +35,7 @@ const ShowMap = (props) => {
     };
 
     return (
-        <APIProvider apiKey="AIzaSyDA9ei89QNEHdNji9_b2rXJgjLVj8Twpms">
+        <APIProvider apiKey={ process.env.API_KEY } >
         <Map
             onLoad={onMapLoad}
             onClick={handleMapClick}
