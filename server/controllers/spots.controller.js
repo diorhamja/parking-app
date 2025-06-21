@@ -20,9 +20,13 @@ module.exports.getOneSpot = (request, response) => {
 
 module.exports.createSpot = (request, response) => {
     Spot.create(request.body)
-        .then(spot => response.json(spot))
-        .catch(err => response.json(err));
-}
+        .then(spot => {
+            return Spot.findById(spot._id).populate('user');
+        })
+        .then(populatedSpot => response.json(populatedSpot))
+        .catch(err => response.status(400).json(err));
+};
+
 
 module.exports.updateSpot = (request, response) => {
     Spot.findOneAndUpdate({ _id: request.params.id }, request.body, { new: true })

@@ -34,11 +34,16 @@ module.exports.login = (req, res) => {
     .catch(err => res.status(500).json({ message: 'Server error', error: err }));
 };
 
+module.exports.register = (req, res) => {
+    const { firstName, lastName, email, password } = req.body;
 
-module.exports.createUser = (request, response) => {
-    User.create(request.body)
-        .then(user => response.json(user))
-        .catch(err => response.json(err))
+    if (!firstName || !lastName || !email || !password) return res.status(400).json({ message: 'Missing credentials' });
+
+    User.create({ firstName, lastName, email, password })
+    .then(user => {
+        res.json({ user });
+    })
+    .catch(err => res.status(500).json({ message: 'Server error', error: err }));
 }
 
 module.exports.updateUser = (request, response) => {

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -7,25 +9,46 @@ import {
   Paper,
   Grid,
 } from '@mui/material';
-import { useRevalidator } from 'react-router-dom';
 
-const Register = () => {
-  const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  });
+const Register = ( props ) => {
+  
+  const { setUser } = props;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser(prev => ({ ...prev, [name]: value }));
-  };
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Submitted:', user);
-    // Add authentication logic here (e.g., API call)
+    setError(null);
+    
+    try {
+      const response = await axios.post('http://localhost:8000/api/users/register', {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+
+      console.log('Registered user:', response.data.user);
+      setUser(response.data.user);
+
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      navigate('/register/car');
+
+    } catch (err) {
+      console.error(err);
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('An error occurred during registration.');
+      }
+    }
   };
 
   return (
@@ -40,8 +63,8 @@ const Register = () => {
                 margin="normal"
                 label="First Name"
                 name="firstName"
-                value={useRevalidator.firstName}
-                onChange={handleChange}
+                value={firstName}
+                onChange={e => setFirstName(e.target.value)}
                 required
             />
             <TextField
@@ -49,8 +72,8 @@ const Register = () => {
                 margin="normal"
                 label="Last Name"
                 name="lastName"
-                value={user.lastName}
-                onChange={handleChange}
+                value={lastName}
+                onChange={e => setLastName(e.target.value)}
                 required
             />
             <TextField
@@ -59,8 +82,8 @@ const Register = () => {
                 label="Email"
                 name="email"
                 type="email"
-                value={user.email}
-                onChange={handleChange}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 required
             />
             <TextField
@@ -69,16 +92,24 @@ const Register = () => {
                 label="Password"
                 name="password"
                 type="password"
-                value={user.password}
-                onChange={handleChange}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 required
             />
+            {error && (
+              <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                {error}
+              </Typography>
+            )}
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 2 }}>
                 Signup!
             </Button>
             </Box>
         </Paper>
-        </Grid>
+        <Link href="/" underline="none">
+          Go Home
+        </Link>
+      </Grid>
     );
 };
 

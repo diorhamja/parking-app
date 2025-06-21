@@ -8,6 +8,7 @@ import {
   Typography,
   Paper,
   Grid,
+  Link,
 } from '@mui/material';
 
 const Login = (props) => {
@@ -32,6 +33,9 @@ const Login = (props) => {
 
       console.log('Logged in user:', response.data.user);
       setUser(response.data.user);
+
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
       navigate('/');
 
     } catch (err) {
@@ -76,11 +80,17 @@ const Login = (props) => {
               {error}
             </Typography>
           )}
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 2 }}>
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 3 }}>
             Login
           </Button>
+          <Link href="/register" underline="none">
+            Don't have an account? Register now!
+          </Link>
         </Box>
       </Paper>
+      <Link href="/" underline="none">
+        Go Home
+      </Link>
     </Grid>
   );
 };

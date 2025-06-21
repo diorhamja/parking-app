@@ -22,7 +22,8 @@ const AddSpot = (props) => {
         userLocation,
         clickedLocation,
         user,
-        setIsPostedOpen
+        setIsPostedOpen,
+        setSelectedSpot
     } = props;
 
     const [description, setDescription] = useState('');
@@ -82,21 +83,22 @@ const AddSpot = (props) => {
 
         try {
             const res = await axios.post('http://localhost:8000/api/spots', {
-                user,
+                user: user._id,
                 description,
                 location,
             });
             setSpots([...spots, res.data]);
+            setSelectedSpot(res.data);
             console.log(res.data);
+
+            setDescription('');
+            setLocation(null);
+            setAddress(null);
+            setIsAddOpen(false);
+            setIsPostedOpen(true);
         } catch (err) {
             console.error(err);
         }
-
-        setDescription('');
-        setLocation(null);
-        setAddress(null);
-        setIsAddOpen(false);
-        setIsPostedOpen(true);
     };
 
     return (

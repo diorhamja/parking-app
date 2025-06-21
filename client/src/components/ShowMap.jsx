@@ -1,10 +1,22 @@
 import { APIProvider, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ShowMap = (props) => {
     
-    const { spots, setSelectedSpot, setIsDetailOpen, userLocation, clickedLocation, setClickedLocation, isPosting } = props;
+    const { 
+        spots, 
+        setSelectedSpot, 
+        setIsDetailOpen, 
+        userLocation, 
+        clickedLocation, 
+        setClickedLocation, 
+        isPosting, 
+        user 
+    } = props;
+    
     const mapRef = useRef(null);
+    const navigate = useNavigate();
 
     const onMapLoad = (map) => {
         mapRef.current = map;
@@ -25,6 +37,10 @@ const ShowMap = (props) => {
     }, [userLocation]);
 
     const handleMapClick = (e) => {
+        if (!user) {
+            navigate('/login')
+        }
+
         const lat = e.detail.latLng.lat;
         const lng = e.detail.latLng.lng;
         const newLocation = { lat, lng };
@@ -58,19 +74,26 @@ const ShowMap = (props) => {
             )}
 
             {spots.map((spot, index) => (
-            <AdvancedMarker
-                key={index}
-                position={{
-                lat: spot.location.coordinates[0],
-                lng: spot.location.coordinates[1],
-                }}
-                onClick={() => {
-                setSelectedSpot(spot);
-                setIsDetailOpen(true);
-                }}
-            >
-                <Pin background="#FBBC04" glyphColor="#000" borderColor="#000" />
-            </AdvancedMarker>
+                <AdvancedMarker
+                    key={index}
+                    position={{
+                    lat: spot.location.coordinates[0],
+                    lng: spot.location.coordinates[1],
+                    }}
+                    onClick={() => {
+                    setSelectedSpot(spot);
+                    setIsDetailOpen(true);
+                    }}
+                >
+                    {
+                        (user?._id == spot.user._id) ? (
+                            <Pin background="#54f542" glyphColor="#000" borderColor="#000" />
+                        ) : (
+                            <Pin background="#FBBC04" glyphColor="#000" borderColor="#000" />
+
+                        )
+                    }
+                </AdvancedMarker>
             ))}
         </Map>
         </APIProvider>

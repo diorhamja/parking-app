@@ -30,7 +30,7 @@ const Header = (props) => {
             }}
             >
             <Toolbar sx={{ justifyContent: 'space-between' }}>
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" onClick={() => navigate('/')}>
                 <Avatar
                     src="/logo.png"
                     alt="Aura Logo"
@@ -55,6 +55,9 @@ const Header = (props) => {
                 {
                     user &&
                     <Typography
+                        onClick={() => {
+                            navigate('/account')
+                        }}
                         variant="p"
                         component="div"
                         sx={{

@@ -13,18 +13,40 @@ import axios from 'axios';
 
 const DetailSpot = (props) => {
 
-    const {isDetailOpen, setIsDetailOpen, id} = props;
+    const {isDetailOpen, setIsDetailOpen, id, user} = props;
     const [spot, setSpot] = useState({});
     const [address, setAddress] = useState(null);
+    const [request, setRequest] = useState(null);
 
     useEffect(() => {
+        if (!spot?._id || !user?._id) return;
+
+        axios.get(`http://localhost:8000/api/requests/spot/${spot._id}`)
+            .then(res => {
+                const allRequests = res.data;
+                const userRequest = allRequests.find(r => r.fromUser._id === user._id);
+        
+                if (userRequest) {
+                    console.log('User has already made a request:', userRequest);
+                    setRequest(userRequest);
+                } else {
+                    setRequest(null);
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching requests:', err.response?.data || err.message);
+            });
+    }, [spot, user]);
+
+    useEffect(() => {
+        if (!id) return;
         const fetchSpot = async () => {
         try {
-        const res = await axios.get('http://localhost:8000/api/spots/' + id);
-        setSpot(res.data);
-        console.log(res.data)
+            const res = await axios.get('http://localhost:8000/api/spots/' + id);
+            setSpot(res.data);
+            console.log(res.data)
         } catch (err) {
-        console.log(err);
+            console.log(err);   
         }
     };
     
@@ -71,12 +93,31 @@ const DetailSpot = (props) => {
         }
     }, [spot]);
 
+    const handleRequest = () => {
+        axios.post('http://localhost:8000/api/requests/', {
+            spot: spot._id,
+            fromUser: user._id,
+            toUser: spot.user?._id
+        })
+        .then(res => {
+            console.log('Request', res.data)
+            setRequest(res.data)
+        })
+        .catch(err => {
+            console.error('Error creating request', err.response?.data || err.message);
+        })
+    }
+
     return(
         <div>
             <Drawer
                 anchor="right"
                 open={isDetailOpen}
-                onClose={() => {setIsDetailOpen(false)}}
+                onClose={() => {
+                    setIsDetailOpen(false);
+                    setSpot({});
+                    setAddress(null);
+                }}
                 PaperProps={{
                     sx: {
                     width: '30vw',
@@ -130,21 +171,46 @@ const DetailSpot = (props) => {
                     Leaving in... 10 minutes
                 </Typography>
 
-                <Button
-                    onClick={() => {setIsDetailOpen(false)}}
-                    variant="contained"
-                    fullWidth
-                    sx={{
-                    backgroundColor: '#ff80ab',
-                    textTransform: 'none',
-                    borderRadius: '12px',
-                    '&:hover': {
-                        backgroundColor: '#f06292',
-                    },
-                    }}
-                >
-                    Request
-                </Button>
+                {
+                    !request &&
+                    <Button
+                        onClick={() => {
+                            handleRequest()
+                        }}
+                        variant="contained"
+                        fullWidth
+                        sx={{
+                        backgroundColor: '#ff80ab',
+                        textTransform: 'none',
+                        borderRadius: '12px',
+                        '&:hover': {
+                            backgroundColor: '#f06292',
+                        },
+                        }}
+                    >
+                        Request
+                    </Button>
+                }
+                {
+                    request &&
+                    <Button
+                        variant="outlined"
+                        sx={{
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            borderColor: '#6a4c93',
+                            color: '#6a4c93',
+                            mb: 1.5,
+                            '&:hover': {
+                                backgroundColor: '#f3e8ff',
+                                borderColor: '#5e548e',
+                                color: '#5e548e',
+                            },
+                        }}
+                    >
+                        Request {request.status}
+                    </Button>
+                }
                 </Drawer>
         </div>
     );

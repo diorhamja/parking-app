@@ -33,19 +33,49 @@ const Home = (props) => {
 
     return (
         <div>
-            <Header setIsAddOpen={ setIsAddOpen } user={ user } />
-            <ShowMap spots={ spots } setSelectedSpot={ setSelectedSpot } setIsDetailOpen={setIsDetailOpen} userLocation={ userLocation } clickedLocation={clickedLocation} setClickedLocation={ setClickedLocation } isPosting={ setIsAddOpen } />
-            {
-                user &&
-                <AddSpot isAddOpen={ isAddOpen } setIsAddOpen={ setIsAddOpen } spots={ spots } setSpots={ setSpots } userLocation={ userLocation } clickedLocation={ clickedLocation } user={ user } setIsPostedOpen={setIsPostedOpen} />
-            }
-            {
-                selectedSpot &&
-                <DetailSpot isDetailOpen={isDetailOpen} setIsDetailOpen={setIsDetailOpen} id={selectedSpot._id}/>
-            }
-            {/* <Posted isPostedOpen={isPostedOpen} setIsPostedOpen={setIsPostedOpen}/> */}
+            <Header 
+                setIsAddOpen={ setIsAddOpen } 
+                user={ user } />
+            <ShowMap 
+                spots={ spots }
+                setSelectedSpot={ setSelectedSpot } 
+                setIsDetailOpen={setIsDetailOpen} 
+                userLocation={ userLocation } 
+                clickedLocation={clickedLocation} 
+                setClickedLocation={ setClickedLocation } 
+                isPosting={ setIsAddOpen } 
+                user={ user }  />
+                {
+                    user &&
+                    <AddSpot 
+                        isAddOpen={ isAddOpen } 
+                        setIsAddOpen={ setIsAddOpen } 
+                        spots={ spots } 
+                        setSpots={ setSpots } 
+                        userLocation={ userLocation } 
+                        clickedLocation={ clickedLocation } 
+                        user={ user } 
+                        setIsPostedOpen={setIsPostedOpen} 
+                        setSelectedSpot={ setSelectedSpot } />
+                }
+                {
+                    selectedSpot &&
+                    <DetailSpot 
+                        isDetailOpen={isDetailOpen} 
+                        setIsDetailOpen={setIsDetailOpen} 
+                        id={selectedSpot._id}
+                        user={user} />
+                }
+                {
+                    selectedSpot &&
+                    <Posted 
+                    isPostedOpen={isPostedOpen} 
+                    setIsPostedOpen={setIsPostedOpen}
+                    selectedSpot={selectedSpot}
+                    user={user} />
+                }
         </div>
-    )
+    );
 }
 
 export default Home;

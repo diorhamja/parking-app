@@ -13,6 +13,21 @@ module.exports.getAllRequests = (request, response) => {
         })
 }
 
+module.exports.getAllRequestsBySpotId = (request, response) => {
+    const spotId = request.params.spotId;
+
+    Request.find({ spot: spotId })
+        .populate('spot')
+        .populate('fromUser')
+        .populate('toUser')
+        .then(requests => {
+            response.json(requests);
+        })
+        .catch(err => {
+            response.json(err);
+        })
+}
+
 module.exports.getOneRequest = (request, response) => {
     Request.findOne({ _id: request.params.id })
         .populate('spot')
