@@ -21,11 +21,13 @@ const Posted = (props) => {
     })
 
     return (
+        <Box sx={{ display: 'flex' }}>
             <Drawer
                 anchor="right"
                 open={isPostedOpen}
-                variant="persistent"
+                variant="permanent"
                 sx={{
+                    flexShrink: 0,
                     zIndex: (theme) => theme.zIndex.drawer - 1,
                     '& .MuiDrawer-paper': {
                     width: '30vw',
@@ -55,6 +57,7 @@ const Posted = (props) => {
                     ))}
                 </Box>
             </Drawer>
+        </Box>
     );
 }
 

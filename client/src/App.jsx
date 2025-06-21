@@ -13,10 +13,6 @@ import AccountView from './views/AccountView';
 function App() {
 
   const [userLocation, setUserLocation] = useState([ 41.3275, 19.8187 ]);
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : null;
-  });
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -52,11 +48,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home userLocation={ userLocation } user={ user } />} />
-        <Route path='/login' element={<PublicRoute user={user}><Login setUser={setUser} /></PublicRoute>} />
-        <Route path='/register' element={<PublicRoute user={user}><Register setUser={setUser} /></PublicRoute>} />
-        <Route path='/register/car' element={<PublicRoute user={user}><CarRegister user={user} /></PublicRoute>} />
-        <Route path='/account' element={<AccountView user={ user } setUser={ setUser }/>} />
+        <Route path='/' element={<Home userLocation={ userLocation } />} />
+        <Route path='/login' element={<PublicRoute><Login/></PublicRoute>} />
+        <Route path='/register' element={<PublicRoute><Register/></PublicRoute>} />
+        <Route path='/register/car' element={<PublicRoute><CarRegister/></PublicRoute>} />
+        <Route path='/account' element={<AccountView/>} />
       </Routes>
     </BrowserRouter>
   );

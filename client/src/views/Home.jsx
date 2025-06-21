@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react' 
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 import ShowMap from '../components/ShowMap';
 import Header from '../components/Header';
 import AddSpot from '../components/AddSpot';
@@ -9,7 +10,8 @@ import Posted from '../components/Posted';
 
 const Home = (props) => {
 
-    const { userLocation, user } = props;
+    const { userLocation } = props;
+    const { user } = useAuth();
     
     const [spots, setSpots] = useState([]);
     const [selectedSpot, setSelectedSpot] = useState(null);
