@@ -18,6 +18,15 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+        },
+        coordinates: {
+            type: [Number],
+        }
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

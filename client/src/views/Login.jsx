@@ -10,10 +10,11 @@ import {
   Grid,
   Link,
 } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 
 const Login = (props) => {
 
-  const { setUser } = props;
+  const { login } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,10 +33,7 @@ const Login = (props) => {
       });
 
       console.log('Logged in user:', response.data.user);
-      setUser(response.data.user);
-
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-
+      login(response.data.user);
       navigate('/');
 
     } catch (err) {

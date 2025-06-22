@@ -11,11 +11,15 @@ import {
 import LoginIcon from '@mui/icons-material/Login';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useDrawer } from '../context/DrawerContext';
+import AddSpot from './AddSpot';
 
-const Header = (props) => {
+const Header = () => {
     const navigate = useNavigate();
 
-    const { setIsAddOpen, user } = props;
+    const { user } = useAuth();
+    const { openDrawer } = useDrawer();
 
     return (
         <AppBar
@@ -73,7 +77,7 @@ const Header = (props) => {
                     onClick={() => {
 
                         if( user ) {
-                            setIsAddOpen(true)
+                            openDrawer(<AddSpot />)
                         } else {
                             navigate('/login')
                         }

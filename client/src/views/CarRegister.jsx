@@ -9,10 +9,11 @@ import {
     Paper,
     Grid,
 } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 
 const CarRegister = (props) => {
 
-    const { user } = props;
+    const { user } = useAuth();
 
     const [make, setMake] = useState('');
     const [model, setModel] = useState('');

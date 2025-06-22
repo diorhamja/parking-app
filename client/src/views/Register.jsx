@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -9,10 +9,11 @@ import {
   Paper,
   Grid,
 } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 
-const Register = ( props ) => {
-  
-  const { setUser } = props;
+const Register = () => {
+
+  const { login, userLocation } = useAuth();
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -25,6 +26,9 @@ const Register = ( props ) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
+    const [lat, lng] = userLocation;
+    const location =({ type: 'Point', coordinates: [lat, lng] })
     
     try {
       const response = await axios.post('http://localhost:8000/api/users/register', {
@@ -32,12 +36,11 @@ const Register = ( props ) => {
         lastName,
         email,
         password,
+        location
       });
 
       console.log('Registered user:', response.data.user);
-      setUser(response.data.user);
-
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      login(response.data.user);
 
       navigate('/register/car');
 

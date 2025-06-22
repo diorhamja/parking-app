@@ -1,11 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthContext from './AuthContext';
+import axios from 'axios';
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user');
         return savedUser ? JSON.parse(savedUser) : null;
     });
+    const [userLocation, setUserLocation] = useState([ 41.3275, 19.8187 ]);
+    
+    useEffect(() => {
+        if (!navigator.geolocation) {
+            console.log("Geolocation not supported.");
+            return;
+        }
+    
+        const success = (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation((prev) => {
+                if (prev[0] !== latitude || prev[1] !== longitude) {
+
+                    if (user) {
+                        axios.patch(`http://localhost:8000/api/users/${user._id}`, {
+                            location: {
+                                type: 'Point',
+                                coordinates: [latitude, longitude]
+                            }
+                        })
+                        .then(res => {
+                            console.log('User location updated on server:', res.data);
+                        })
+                        .catch(err => {
+                            console.error('Error updating user location:', err.response?.data || err.message);
+                        });
+                    }
+
+                    return [latitude, longitude];
+                }
+                return prev;
+            });
+        };
+    
+        const error = (err) => {
+            console.error("Geolocation error:", err.message);
+        };
+    
+        const watchId = navigator.geolocation.watchPosition(success, error, {
+            enableHighAccuracy: true,
+            maximumAge: 10000,
+            timeout: 10000
+        });
+    
+        return () => navigator.geolocation.clearWatch(watchId);
+    }, [user]);
 
     const login = (userData) => {
         setUser(userData);
@@ -18,7 +65,7 @@ const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, userLocation }}>
         {children}
         </AuthContext.Provider>
     );
