@@ -7,15 +7,18 @@ import { BrowserRouter } from 'react-router-dom';
 import AuthProvider from './context/AuthProvider.jsx';
 import SpotProvider from './context/SpotProvider.jsx';
 import DrawerProvider from './context/DrawerProvider.jsx';
+import AccRequestProvider from './context/AccRequestProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <SpotProvider>
-          <DrawerProvider>
-            <App />
-          </DrawerProvider>
+            <AccRequestProvider>
+              <DrawerProvider>
+                <App />
+              </DrawerProvider>
+            </AccRequestProvider>
         </SpotProvider>
       </AuthProvider>
     </BrowserRouter>

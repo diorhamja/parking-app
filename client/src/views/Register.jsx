@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -8,11 +8,13 @@ import {
   Typography,
   Paper,
   Grid,
+  IconButton,
+  Link,
 } from '@mui/material';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
-
   const { login, userLocation } = useAuth();
 
   const [firstName, setFirstName] = useState('');
@@ -27,26 +29,26 @@ const Register = () => {
     e.preventDefault();
     setError(null);
 
-    const [lat, lng] = userLocation;
-    const location =({ type: 'Point', coordinates: [lat, lng] })
-    
     try {
+      const [lat, lng] = userLocation;
+
+      const location = {
+        type: 'Point',
+        coordinates: [lat, lng],
+      };
+
       const response = await axios.post('http://localhost:8000/api/users/register', {
         firstName,
         lastName,
         email,
         password,
-        location
+        location,
       });
 
-      console.log('Registered user:', response.data.user);
       login(response.data.user);
-
       navigate('/register/car');
-
     } catch (err) {
-      console.error(err);
-      if (err.response && err.response.data && err.response.data.message) {
+      if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
         setError('An error occurred during registration.');
@@ -55,65 +57,121 @@ const Register = () => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" >
-        <Paper elevation={3} sx={{ padding: 4, width: 400 }}>
-            <Typography variant="h5" align="center" gutterBottom>
-            Register
+      <Paper
+        elevation={10}
+        sx={{
+          width: '100%',
+          maxWidth: 420,
+          padding: 5,
+          borderRadius: 4,
+          backgroundColor: '#fff0f6',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.1)',
+        }}
+      >
+        <Grid container justifyContent="flex-end">
+          <IconButton
+            component={RouterLink}
+            to="/"
+            sx={{
+              color: '#6a5671',
+              transition: '0.3s',
+              '&:hover': {
+                color: '#a898af',
+              },
+            }}
+          >
+            <HomeRoundedIcon fontSize="medium" />
+          </IconButton>
+        </Grid>
+
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          sx={{ fontWeight: 550, color: '#6a5671' }}
+        >
+          Create Account
+        </Typography>
+
+        <Box component="form" onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            margin="normal"
+            label="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
+            required
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
+            required
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
+            required
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
+            required
+          />
+
+          {error && (
+            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+              {error}
             </Typography>
-            <Box component="form" onSubmit={handleSubmit}>
-            <TextField
-                fullWidth
-                margin="normal"
-                label="First Name"
-                name="firstName"
-                value={firstName}
-                onChange={e => setFirstName(e.target.value)}
-                required
-            />
-            <TextField
-                fullWidth
-                margin="normal"
-                label="Last Name"
-                name="lastName"
-                value={lastName}
-                onChange={e => setLastName(e.target.value)}
-                required
-            />
-            <TextField
-                fullWidth
-                margin="normal"
-                label="Email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-            />
-            <TextField
-                fullWidth
-                margin="normal"
-                label="Password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-            />
-            {error && (
-              <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                {error}
-              </Typography>
-            )}
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 2 }}>
-                Signup!
-            </Button>
-            </Box>
-        </Paper>
-        <Link href="/" underline="none">
-          Go Home
-        </Link>
-      </Grid>
-    );
+          )}
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 3,
+              mb: 2,
+              py: 1.4,
+              backgroundColor: '#6a5671',
+              color: '#fff',
+              fontWeight: 'bold',
+              borderRadius: 3,
+              textTransform: 'none',
+              '&:hover': {
+                backgroundColor: '#a898af',
+              },
+            }}
+          >
+            Register
+          </Button>
+
+          <Typography align="center" variant="body2" sx={{ mt: 2 }}>
+            Already have an account?{' '}
+            <Link component={RouterLink} to="/login" underline="hover" sx={{ color: '#0e58d8' }}>
+              Login here
+            </Link>
+          </Typography>
+        </Box>
+      </Paper>
+  );
 };
 
 export default Register;

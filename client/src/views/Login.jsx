@@ -8,12 +8,13 @@ import {
   Typography,
   Paper,
   Grid,
+  IconButton,
   Link,
 } from '@mui/material';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useAuth } from '../context/AuthContext';
 
-const Login = (props) => {
-
+const Login = () => {
   const { login } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -32,13 +33,10 @@ const Login = (props) => {
         password,
       });
 
-      console.log('Logged in user:', response.data.user);
       login(response.data.user);
       navigate('/');
-
     } catch (err) {
-      console.error(err);
-      if (err.response && err.response.data && err.response.data.message) {
+      if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
         setError('An error occurred during login.');
@@ -47,49 +45,109 @@ const Login = (props) => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
-      <Paper elevation={3} sx={{ padding: 4, width: 400 }}>
-        <Typography variant="h5" align="center" gutterBottom>
+      <Paper
+        elevation={10}
+        sx={{
+          width: '100%',
+          maxWidth: 420,
+          padding: 5,
+          borderRadius: 4,
+          backgroundColor: '#fff0f6',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.1)',
+        }}
+      >
+        <Grid container justifyContent="flex-end">
+          <IconButton
+            href="/"
+            sx={{
+              color: '#1c2a40',
+              transition: '0.3s',
+              '&:hover': {
+                color: '#506079',
+              },
+            }}
+          >
+            <HomeRoundedIcon fontSize="medium" />
+          </IconButton>
+        </Grid>
+
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          sx={{ fontWeight: 550, color: '#1c2a40' }}
+        >
           Login
         </Typography>
+
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
             fullWidth
             margin="normal"
             label="Email"
-            name="email"
             type="email"
+            variant="outlined"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
             required
           />
+
           <TextField
             fullWidth
             margin="normal"
             label="Password"
-            name="password"
             type="password"
+            variant="outlined"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
             required
           />
+
           {error && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
               {error}
             </Typography>
           )}
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 3 }}>
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 3,
+              mb: 2,
+              py: 1.4,
+              backgroundColor: '#1c2a40',
+              color: '#fff',
+              fontWeight: 'bold',
+              borderRadius: 3,
+              textTransform: 'none',
+              '&:hover': {
+                backgroundColor: '#506079',
+              },
+            }}
+          >
             Login
           </Button>
-          <Link href="/register" underline="none">
-            Don't have an account? Register now!
-          </Link>
+
+          <Typography align="center" variant="body2" sx={{ mt: 2 }}>
+            Don't have an account?{' '}
+            <Link href="/register" underline="hover" sx={{ color: '#0e58d8' }}>
+              Register here
+            </Link>
+          </Typography>
         </Box>
       </Paper>
-      <Link href="/" underline="none">
-        Go Home
-      </Link>
-    </Grid>
   );
 };
 

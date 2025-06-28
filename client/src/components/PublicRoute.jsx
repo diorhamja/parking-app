@@ -5,9 +5,9 @@ import { useAuth } from '../context/AuthContext';
 const PublicRoute = (props) => {
 
     const { children } = props;
-    const { user } = useAuth();
+    const { user, car } = useAuth();
 
-    if (user) {
+    if (user && car) {
         return <Navigate to={'/'} replace />;
     }
     

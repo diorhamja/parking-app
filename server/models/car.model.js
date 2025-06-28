@@ -7,14 +7,25 @@ const CarSchema = new mongoose.Schema({
         required: true
     },
     make: { 
-        type: String
+        type: String,
+        required: true
     },
     model: { 
-        type: String
+        type: String,
+        required: true
     },
-    licensePlate: { 
-        type: String
+    color: {
+        type: String,
+        required: true
     },
+    plate: { 
+        type: String,
+        required: true
+    },
+    image: {
+        type: String,
+        required: true
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Car', CarSchema);

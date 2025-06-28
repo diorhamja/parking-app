@@ -14,18 +14,22 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useDrawer } from '../context/DrawerContext';
 import AddSpot from './AddSpot';
+import Accepted from './Accepted';
+import { useSpots } from '../context/SpotContext';
 
-const Header = () => {
+const Header = ({ acceptedComponent }) => {
     const navigate = useNavigate();
 
     const { user } = useAuth();
     const { openDrawer } = useDrawer();
+    const { setRefresh } = useSpots();
 
     return (
         <AppBar
             position="static"
             elevation={0}
             sx={{
+                width: '70vw',
                 backgroundColor: 'rgba(255, 255, 255, 0.4)',
                 backdropFilter: 'blur(10px)',
                 boxShadow: 'none',
@@ -34,7 +38,10 @@ const Header = () => {
             }}
             >
             <Toolbar sx={{ justifyContent: 'space-between' }}>
-                <Box display="flex" alignItems="center" onClick={() => navigate('/')}>
+                <Box display="flex" alignItems="center" onClick={() => {
+                    setRefresh(true)
+                    navigate('/')
+                }}>
                 <Avatar
                     src="/logo.png"
                     alt="Aura Logo"
@@ -47,7 +54,7 @@ const Header = () => {
                     fontFamily: '"Pacifico", cursive',
                     fontStyle: 'italic',
                     fontWeight: 400,
-                    color: '#5e548e',
+                    color: '#1c2a40',
                     }}
                 >
                     Aura
@@ -66,7 +73,7 @@ const Header = () => {
                         component="div"
                         sx={{
                         fontStyle: 'italic',
-                        color: '#5e548e',
+                        color: '#1c2a40',
                         }}
                     >
                         Hi, { user.firstName }
@@ -75,16 +82,18 @@ const Header = () => {
 
                 <IconButton
                     onClick={() => {
-
-                        if( user ) {
-                            openDrawer(<AddSpot />)
-                        } else {
-                            navigate('/login')
+                        if (acceptedComponent) {
+                            return openDrawer(<Accepted />);
                         }
-
+                    
+                        if (user) {
+                            return openDrawer(<AddSpot />);
+                        }
+                    
+                        navigate('/login');
                     }}
                     sx={{
-                    color: '#6a4c93',
+                    color: '#1c2a40',
                     backgroundColor: 'rgba(255, 255, 255, 0.3)',
                     borderRadius: '50%',
                     '&:hover': {
@@ -99,7 +108,7 @@ const Header = () => {
                     !user &&
                     <Button
                         sx={{
-                        color: '#6a4c93',
+                        color: '#1c2a40',
                         textTransform: 'none',
                         fontWeight: 'bold',
                         fontFamily: '"Quicksand", sans-serif',

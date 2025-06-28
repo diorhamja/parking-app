@@ -5,7 +5,10 @@ import axios from 'axios';
 const SpotProvider = ({ children }) => {
     const [spots, setSpots] = useState([]);
     const [selectedSpot, setSelectedSpot] = useState(null);
+    const [selectedSpotCar, setSelectedSpotCar] = useState(null);
     const [clickedLocation, setClickedLocation] = useState(null);
+    const [eta, setEta] = useState(null);
+    const [refresh, setRefresh] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -14,12 +17,28 @@ const SpotProvider = ({ children }) => {
                 console.log(res.data);
                 setSpots(res.data);
                 setIsLoading(false);
+                setRefresh(false);
             })
             .catch((err) => {
                 console.log(err);
                 setIsLoading(false);
             })
-    }, []);
+    }, [refresh]);
+
+    useEffect(() => {
+        if (selectedSpot) {
+            axios.get(`http://localhost:8000/api/cars/user/${selectedSpot.user._id}`)
+            .then((res) => {
+                console.log(`This is the selected car data ${res.data.image}`);
+                setSelectedSpotCar(res.data);
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setIsLoading(false);
+            })
+        }
+    }, [selectedSpot]);
 
     const fetchAddress = async (lat, lng) => {
         try {
@@ -57,13 +76,18 @@ const SpotProvider = ({ children }) => {
             setSpots,
             selectedSpot,
             setSelectedSpot, 
+            selectedSpotCar,
             clickedLocation,
             setClickedLocation,
+            eta, 
+            setEta,
+            refresh,
+            setRefresh,
             fetchAddress
         }}>
-        {
+        { 
             !isLoading &&
-            children
+            children 
         }
         </SpotContext.Provider>
     );

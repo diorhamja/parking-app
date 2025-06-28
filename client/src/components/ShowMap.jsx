@@ -1,4 +1,5 @@
 import { APIProvider, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -66,18 +67,31 @@ const ShowMap = () => {
         }
     };
 
-    const getPinColor = (spot) => {
-        if (selectedSpot?._id === spot._id) return '#6a4c93'; // purple for selected
-        if (user?._id === spot.user._id) return '#54f542'; // green for own posts
-        return '#FBBC04'; // yellow for others
-    };    
+    const getPinStyle = (spot) => {
+        if (selectedSpot?._id === spot._id) {
+            return {
+                color: '#ff7cf6',
+            };
+        }
+
+        if (user?._id === spot.user._id) {
+            return {
+                color: '#7cedff',
+            };
+        }
+
+        return {
+            color: '#d29fff',
+        };
+    };
+
 
     const BlueDot = () => (
         <div
             style={{
-            width: '14px',
-            height: '14px',
-            backgroundColor: '#2196F3',
+            width: '18px',
+            height: '18px',
+            backgroundColor: '#00aeff',
             borderRadius: '50%',
             boxShadow: '0 0 8px #2196F3',
             }}
@@ -91,7 +105,7 @@ const ShowMap = () => {
             onClick={handleMapClick}
             mapId="3fbd2f5a3b7758a1b581079d"
             colorScheme="DARK"
-            style={{ width: '80vw', height: '80vh' }}
+            style={{ width: '70vw', height: '80vh' }}
             defaultCenter={{ lat: userLocation[0], lng: userLocation[1] }}
             defaultZoom={15}
             gestureHandling="greedy"
@@ -103,23 +117,56 @@ const ShowMap = () => {
 
             {clickedLocation && (
                 <AdvancedMarker position={{ lat: clickedLocation[0], lng: clickedLocation[1] }}>
-                    <Pin background="#ff4081" glyphColor="#fff" borderColor="#d81b60" />
+                    <LocationOnOutlinedIcon
+                    sx={{
+                        width: 35,
+                        height: 35,
+                        color: '#ffc6ec',
+                        animation: 'glowPulse 1.8s infinite ease-in-out',
+                        '@keyframes glowPulse': {
+                        '0%': {
+                            filter: 'drop-shadow(0 0 0px #ffc6ec)',
+                            transform: 'scale(1)',
+                        },
+                        '50%': {
+                            filter: 'drop-shadow(0 0 12px #ffc6ec)',
+                            transform: 'scale(1.2)',
+                        },
+                        '100%': {
+                            filter: 'drop-shadow(0 0 0px #ffc6ec)',
+                            transform: 'scale(1)',
+                        },
+                        },
+                    }}
+                    />
                 </AdvancedMarker>
             )}
 
-            {spots.map((spot, index) => (
+            {spots
+            .filter((spot) => spot.active)
+            .map((spot, index) => {
+                const { color } = getPinStyle(spot);
+                return (
                 <AdvancedMarker
                     key={index}
                     position={{
-                        lat: spot.location.coordinates[0],
-                        lng: spot.location.coordinates[1],
+                    lat: spot.location.coordinates[0],
+                    lng: spot.location.coordinates[1],
                     }}
                     onClick={() => handleMarkerClick(spot)}
-                    title={spot.description} // replace with time!!
+                    title={spot.description}
                 >
-                    <Pin background={getPinColor(spot)} glyphColor="#000" borderColor="#000" />
+                    <LocationOnOutlinedIcon
+                    sx={{
+                        width: 35,
+                        height: 35,
+                        color,
+                    }}
+                    />
                 </AdvancedMarker>
-            ))}
+                );
+            })}
+
             </Map>
         </APIProvider>
     );

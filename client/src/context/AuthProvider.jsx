@@ -8,6 +8,7 @@ const AuthProvider = ({ children }) => {
         return savedUser ? JSON.parse(savedUser) : null;
     });
     const [userLocation, setUserLocation] = useState([ 41.3275, 19.8187 ]);
+    const [car, setCar] = useState(null);
     
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -42,7 +43,7 @@ const AuthProvider = ({ children }) => {
         };
     
         const error = (err) => {
-            console.error("Geolocation error:", err.message);
+            console.warn("Geolocation denied or failed. Using default location.");
         };
     
         const watchId = navigator.geolocation.watchPosition(success, error, {
@@ -52,6 +53,19 @@ const AuthProvider = ({ children }) => {
         });
     
         return () => navigator.geolocation.clearWatch(watchId);
+    }, [user]);
+
+    useEffect(() => {
+        if (user) {
+            axios.get(`http://localhost:8000/api/cars/user/${user._id}`)
+            .then((res) => {
+                console.log(res.data);
+                setCar(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
     }, [user]);
 
     const login = (userData) => {
@@ -65,7 +79,7 @@ const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, userLocation }}>
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, userLocation, car, setCar }}>
         {children}
         </AuthContext.Provider>
     );

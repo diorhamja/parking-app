@@ -9,7 +9,7 @@ import DetailSpot from '../components/DetailSpot';
 import Posted from '../components/Posted';
 import { useSpots } from '../context/SpotContext';
 
-const Home = (props) => {
+const Home = () => {
     
     return (
         <div>

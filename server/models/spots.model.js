@@ -21,6 +21,10 @@ const SpotSchema = new mongoose.Schema({
             required: true
         }
     },
+    timeActive: {
+        type: Number,
+        required: true
+    },
     active: {
         type: Boolean,
         default: true

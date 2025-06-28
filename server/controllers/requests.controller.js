@@ -1,4 +1,5 @@
 const Request = require('../models/request.model');
+const Spot = require('../models/spots.model');
 
 module.exports.getAllRequests = (request, response) => {
     Request.find({})
@@ -35,6 +36,31 @@ module.exports.getOneRequest = (request, response) => {
         .populate('toUser')
         .then(req => response.json(req))
         .catch(err => response.json(err))
+}
+
+module.exports.acceptRequest = async (req, res) => {
+    const { requestId } = req.params;
+
+    try {
+        const acceptedRequest = await Request.findById(requestId);
+        if (!acceptedRequest) return res.status(404).json({ message: 'Request not found' });
+    
+        const spotId = acceptedRequest.spot;
+    
+        acceptedRequest.status = 'accepted';
+        await acceptedRequest.save();
+    
+        await Request.updateMany(
+            { spot: spotId, _id: { $ne: requestId } },
+            { $set: { status: 'declined' } }
+        );
+    
+        await Spot.findByIdAndUpdate(spotId, { active: false });
+    
+        res.json({ message: 'Request accepted, others declined, spot marked inactive' });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
 }
 
 module.exports.createRequest = (request, response) => {

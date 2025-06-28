@@ -35,11 +35,11 @@ module.exports.login = (req, res) => {
 };
 
 module.exports.register = (req, res) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, location } = req.body;
 
-    if (!firstName || !lastName || !email || !password) return res.status(400).json({ message: 'Missing credentials' });
+    if (!firstName || !lastName || !email || !password || !location) return res.status(400).json({ message: 'Missing credentials' });
 
-    User.create({ firstName, lastName, email, password })
+    User.create({ firstName, lastName, email, password, location })
     .then(user => {
         res.json({ user });
     })
