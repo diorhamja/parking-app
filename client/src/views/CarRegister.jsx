@@ -68,7 +68,7 @@ const CarRegister = () => {
         >
             <Grid container justifyContent="flex-end">
             <IconButton
-                href="/"
+                onClick={() => navigate('/')}
                 sx={{
                 color: '#6a5671',
                 transition: '0.3s',

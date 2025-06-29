@@ -9,7 +9,6 @@ import {
   Paper,
   Grid,
   IconButton,
-  Link,
 } from '@mui/material';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useAuth } from '../context/AuthContext';
@@ -58,7 +57,7 @@ const Login = () => {
       >
         <Grid container justifyContent="flex-end">
           <IconButton
-            href="/"
+            onClick={() => navigate('/')}
             sx={{
               color: '#1c2a40',
               transition: '0.3s',
@@ -140,11 +139,11 @@ const Login = () => {
             Login
           </Button>
 
-          <Typography align="center" variant="body2" sx={{ mt: 2 }}>
-            Don't have an account?{' '}
-            <Link href="/register" underline="hover" sx={{ color: '#0e58d8' }}>
+          <Typography align="center" variant="body2" sx={{ mt: 0 }}>
+            Don't have an account?
+            <Button onClick={() => navigate('/register')} underline="hover" sx={{ color: '#0e58d8' }}>
               Register here
-            </Link>
+            </Button>
           </Typography>
         </Box>
       </Paper>

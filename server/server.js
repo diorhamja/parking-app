@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require('dotenv').config();
+const Spot = require('./models/spots.model');
 
 app.use(cors());
 app.use(express.json());
@@ -16,3 +17,12 @@ require('./routes/request.routes')(app);
 app.listen(8000, () => {
     console.log("Listening at Port 8000")
 })
+
+setInterval(async () => {
+    try {
+        await Spot.expireInactiveSpots();
+        console.log('Expired inactive spots.');
+    } catch (err) {
+        console.error('Error expiring spots:', err.message);
+    }
+}, 600000);

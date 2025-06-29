@@ -162,7 +162,6 @@ const AccountView = () => {
             </Button>
         </Paper>
 
-        {/* Main Content */}
         <Box sx={{ flex: 1, p: 4, overflow: 'auto' }}>
             {activeTab === 0 && (
                 <EditProfile />
@@ -189,7 +188,6 @@ const AccountView = () => {
                 <Typography color="#7D8BA5">
                 Your parking history will appear here
                 </Typography>
-                {/* Add your history component here */}
             </Paper>
             )}
 
@@ -210,7 +208,6 @@ const AccountView = () => {
                 <Typography color="#7D8BA5">
                 Additional settings will appear here
                 </Typography>
-                {/* Add your settings components here */}
             </Paper>
             )}
         </Box>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -9,7 +9,6 @@ import {
   Paper,
   Grid,
   IconButton,
-  Link,
 } from '@mui/material';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useAuth } from '../context/AuthContext';
@@ -70,8 +69,7 @@ const Register = () => {
       >
         <Grid container justifyContent="flex-end">
           <IconButton
-            component={RouterLink}
-            to="/"
+            onClick={() => navigate('/')}
             sx={{
               color: '#6a5671',
               transition: '0.3s',
@@ -163,11 +161,11 @@ const Register = () => {
             Register
           </Button>
 
-          <Typography align="center" variant="body2" sx={{ mt: 2 }}>
-            Already have an account?{' '}
-            <Link component={RouterLink} to="/login" underline="hover" sx={{ color: '#0e58d8' }}>
+          <Typography align="center" variant="body2" sx={{ mt: 0 }}>
+            Already have an account?
+            <Button onClick={() => navigate('/login')} underline="hover" sx={{ color: '#0e58d8' }}>
               Login here
-            </Link>
+            </Button>
           </Typography>
         </Box>
       </Paper>
