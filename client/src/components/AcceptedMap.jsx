@@ -61,7 +61,7 @@ const AcceptedMap = () => {
         <APIProvider apiKey={ import.meta.env.VITE_API_KEY } >
         <Header acceptedComponent={true} />
         <Map
-            mapId="3fbd2f5a3b7758a1b581079d"
+            mapId={ import.meta.env.VITE_MAP_ID }
             colorScheme="DARK"
             style={{ width: '70vw', height: '80vh' }}
             defaultCenter={ origin }

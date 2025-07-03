@@ -109,7 +109,7 @@ const ShowMap = () => {
         <Map
             onLoad={onMapLoad}
             onClick={handleMapClick}
-            mapId="3fbd2f5a3b7758a1b581079d"
+            mapId={ import.meta.env.VITE_MAP_ID }
             colorScheme="DARK"
             style={{ width: '70vw', height: '80vh' }}
             defaultCenter={{ lat: userLocation[0], lng: userLocation[1] }}
