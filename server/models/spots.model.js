@@ -4,11 +4,11 @@ const SpotSchema = new mongoose.Schema({
     user: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
-        required: true
+        required: [true, "User must be defined"]
     },
     description: { 
         type: String,
-        required: true
+        required: [true, "Description is required"]
     },
     location: {
         type: {
@@ -18,12 +18,12 @@ const SpotSchema = new mongoose.Schema({
         },
         coordinates: {
             type: [Number],
-            required: true
+            required: [true, "Location is required"]
         }
     },
     timeActive: {
         type: Number,
-        required: true
+        required: [true, "Must set a time"]
     },
     expiresAt: {
         type: Date

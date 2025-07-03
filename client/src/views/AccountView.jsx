@@ -20,10 +20,12 @@ import Header from '../components/Header';
 import EditProfile from '../components/EditProfile';
 import EditCar from '../components/EditCar';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const AccountView = () => {
 
     const theme = useTheme();
+    const navigate = useNavigate();
 
     const { user } = useAuth();
     const [activeTab, setActiveTab] = useState(0);
@@ -147,6 +149,7 @@ const AccountView = () => {
 
             <Button
             startIcon={<HomeIcon />}
+            onClick={() => navigate('/')}
             sx={{
                 mb: 2,
                 mx: 2,

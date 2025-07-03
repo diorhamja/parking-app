@@ -11,7 +11,7 @@ import Posted from './Posted';
 
 const ShowMap = () => {
     
-    const { user, userLocation } = useAuth();
+    const { user, car, userLocation } = useAuth();
     const { spots, selectedSpot, setSelectedSpot, clickedLocation, setClickedLocation } = useSpots();
     const { openDrawer } = useDrawer();
 
@@ -39,6 +39,9 @@ const ShowMap = () => {
     const handleMapClick = (e) => {
         if (!user) {
             navigate('/login')
+        } else if (!car) {
+            navigate('/register/car');
+            return;
         } else {
             const lat = e.detail.latLng.lat;
             const lng = e.detail.latLng.lng;
@@ -54,6 +57,9 @@ const ShowMap = () => {
     const handleMarkerClick = (spot) => {
         if (!user) {
             navigate('/login');
+            return;
+        } else if (!car) {
+            navigate('/register/car');
             return;
         }
 

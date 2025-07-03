@@ -13,7 +13,7 @@ cloudinary.config({
 
 export const generateCarImage = async (make, model, color) => {
     try {
-        const prompt = `A realistic, high-quality PNG image of a ${color} ${make} ${model} car, parked on a transparent background, 45 degree side view, studio lighting, no other distractions, where the car is in full view`;
+        const prompt = `A realistic, high-quality PNG image of a single ${color} ${make} ${model} car, parked on a transparent background, 45 degree front to side view, studio lighting, no other distractions, where the car is in full view`;
 
         const output = await replicate.run(
             "fofr/sticker-maker:4acb778eb059772225ec213948f0660867b2e03f277448f18cf1800b96a65a1a",

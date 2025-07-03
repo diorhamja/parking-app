@@ -14,7 +14,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
-  const { login, userLocation } = useAuth();
+  const { setUser, userLocation } = useAuth();
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -42,9 +42,9 @@ const Register = () => {
         email,
         password,
         location,
-      });
+      }, { withCredentials: true });
 
-      login(response.data.user);
+      setUser(response.data.user);
       navigate('/register/car');
     } catch (err) {
       if (err.response?.data?.message) {
@@ -163,8 +163,8 @@ const Register = () => {
 
           <Typography align="center" variant="body2" sx={{ mt: 0 }}>
             Already have an account?
-            <Button onClick={() => navigate('/login')} underline="hover" sx={{ color: '#0e58d8' }}>
-              Login here
+            <Button onClick={() => navigate('/login')} sx={{ color: '#6a5671' }}>
+              Login
             </Button>
           </Typography>
         </Box>

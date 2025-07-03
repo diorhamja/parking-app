@@ -3,13 +3,21 @@ import AuthContext from './AuthContext';
 import axios from 'axios';
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(() => {
-        const savedUser = localStorage.getItem('user');
-        return savedUser ? JSON.parse(savedUser) : null;
-    });
+    const [user, setUser] = useState(null);
     const [userLocation, setUserLocation] = useState([ 41.3275, 19.8187 ]);
     const [car, setCar] = useState(null);
     
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/users/me', { withCredentials: true })
+            .then((res) => {
+                console.log(`In here ${res.data}`)
+                setUser(res.data.user);
+            })
+            .catch(() => {
+                setUser(null);
+            })
+    }, []);
+
     useEffect(() => {
         if (!navigator.geolocation) {
             console.log("Geolocation not supported.");
@@ -27,7 +35,7 @@ const AuthProvider = ({ children }) => {
                                 type: 'Point',
                                 coordinates: [latitude, longitude]
                             }
-                        })
+                        }, { withCredentials: true })
                         .then(res => {
                             console.log('User location updated on server:', res.data);
                         })
@@ -68,18 +76,18 @@ const AuthProvider = ({ children }) => {
         }
     }, [user]);
 
-    const login = (userData) => {
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-    };
-
-    const logout = () => {
+    const logout = async () => {
+        try {
+            await axios.get('http://localhost:8000/api/users/logout', { withCredentials: true });
+        } catch (err) {
+            console.error('Logout error:', err.response?.data || err.message);
+        }
         setUser(null);
-        localStorage.removeItem('user');
+        setCar(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, userLocation, car, setCar }}>
+        <AuthContext.Provider value={{ user, setUser, logout, isAuthenticated: !!user, userLocation, car, setCar }}>
         {children}
         </AuthContext.Provider>
     );

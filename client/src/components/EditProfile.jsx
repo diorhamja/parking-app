@@ -14,21 +14,36 @@ import {
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 const EditProfile = () => {
 
-    const { user, logout } = useAuth();
+    const { user, setUser, logout } = useAuth();
     const navigate = useNavigate();
 
     const [firstName, setFirstName] = useState(user.firstName);
     const [lastName, setLastName] = useState(user.lastName);
     const [email, setEmail] = useState(user.email);
-    const [password, setPassword] = useState(user.password);
 
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
 
-        console.log("Saved");
+        if (!user._id) {
+            return;
+        }
+
+        try {
+            const res = await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
+                firstName,
+                lastName,
+                email,
+            }, { withCredentials: true });
+        
+            console.log('User saved:', res.data);
+            setUser(res.data);
+        } catch (err) {
+            console.error('Error saving user:', err.response?.data || err.message);
+        }
     }
 
     const handleLogout = (e) => {
@@ -88,22 +103,6 @@ const EditProfile = () => {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            sx={{
-                mb: 3,
-                '& .MuiOutlinedInput-root': {
-                borderRadius: 1,
-                bgcolor: 'rgba(255,255,255,0.8)'
-                }
-            }}
-            />
-
-            <TextField
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             sx={{
                 mb: 3,
                 '& .MuiOutlinedInput-root': {

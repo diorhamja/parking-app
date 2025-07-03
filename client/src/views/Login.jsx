@@ -9,17 +9,20 @@ import {
   Paper,
   Grid,
   IconButton,
+  useTheme,
 } from '@mui/material';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-  const { login } = useAuth();
+
+  const { setUser } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
+  const theme = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -30,9 +33,9 @@ const Login = () => {
       const response = await axios.post('http://localhost:8000/api/users/login', {
         email,
         password,
-      });
+      }, { withCredentials: true });
 
-      login(response.data.user);
+      setUser(response.data.user);
       navigate('/');
     } catch (err) {
       if (err.response?.data?.message) {
@@ -59,10 +62,10 @@ const Login = () => {
           <IconButton
             onClick={() => navigate('/')}
             sx={{
-              color: '#1c2a40',
+              color: '#6a5671',
               transition: '0.3s',
               '&:hover': {
-                color: '#506079',
+                color: '#a898af',
               },
             }}
           >
@@ -74,7 +77,7 @@ const Login = () => {
           variant="h4"
           align="center"
           gutterBottom
-          sx={{ fontWeight: 550, color: '#1c2a40' }}
+          sx={{ fontWeight: 550, color: '#6a5671' }}
         >
           Login
         </Typography>
@@ -126,13 +129,13 @@ const Login = () => {
               mt: 3,
               mb: 2,
               py: 1.4,
-              backgroundColor: '#1c2a40',
+              backgroundColor: '#6a5671',
               color: '#fff',
               fontWeight: 'bold',
               borderRadius: 3,
               textTransform: 'none',
               '&:hover': {
-                backgroundColor: '#506079',
+                backgroundColor: '#a898af',
               },
             }}
           >
@@ -141,8 +144,8 @@ const Login = () => {
 
           <Typography align="center" variant="body2" sx={{ mt: 0 }}>
             Don't have an account?
-            <Button onClick={() => navigate('/register')} underline="hover" sx={{ color: '#0e58d8' }}>
-              Register here
+            <Button onClick={() => navigate('/register')} sx={{ color: '#6a5671' }}>
+              Register
             </Button>
           </Typography>
         </Box>

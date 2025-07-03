@@ -4,27 +4,29 @@ const CarSchema = new mongoose.Schema({
     user: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
-        required: true
+        required: [true, "User reference is required"] 
     },
     make: { 
         type: String,
-        required: true
+        required: [true, "Make is required"] 
     },
     model: { 
         type: String,
-        required: true
+        required: [true, "Model is required"] 
     },
     color: {
         type: String,
-        required: true
+        required: [true, "Color is required"] 
     },
     plate: { 
         type: String,
-        required: true
+        minlength: [6, "License plate must be at least 6 characters long"],
+        maxlength: [7, "Please enter a valid license plate"],
+        required: [true, "License plate is required"] 
     },
     image: {
         type: String,
-        required: true
+        required: [true, "Image generation failed"]
     }
 }, { timestamps: true });
 

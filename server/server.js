@@ -1,12 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const Spot = require('./models/spots.model');
 
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://localhost:5173'}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 require('./config/mongoose.config');
 require('./routes/spots.routes')(app);
